@@ -50,6 +50,16 @@ class StudentRepository
         return students;
     }
 
+    // Retorna todos os estudantes formados
+    public List<Student> GetAllFormed()
+    {
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+
+        var students = connection.Query<Student>("SELECT * FROM Students WHERE (former = true)").ToList();
+
+        return students;
+    }
+
     // Retorna todos os estudantes de uma cidade (deve ser possível passar o nome incompleto da cidade)
     public List<Student> GetAllStudentByCity(string city)
     {
@@ -60,7 +70,7 @@ class StudentRepository
         return students;
     }
 
-    // Retorna o número de estudantes agrupados por cidade
+    // Retorna os estudantes das cidades presentes no array cities
     public List<Student> GetAllByCities(string[] cities)
     {
         using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
@@ -68,6 +78,25 @@ class StudentRepository
         var students = connection.Query<Student>("SELECT * FROM Students WHERE city IN @Cities", new { Cities = cities }).ToList();
 
         return students;
+    }
+
+    // Retorna o número de estudantes agrupados por cidade
+    public List<CountStudentGroupByAttribute> CountByCities()
+    {
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+
+        var result = connection.Query<CountStudentGroupByAttribute>("SELECT city AS AttributeName, count(registration) AS StudentNumber FROM Students GROUP BY city").ToList();
+
+        return result;
+    }
+
+    public List<CountStudentGroupByAttribute> CountByFormed()
+    {
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+
+        var result = connection.Query<CountStudentGroupByAttribute>("SELECT former AS AttributeName, count(registration) AS StudentNumber FROM Students GROUP BY former").ToList();
+
+        return result;
     }
 
     // Verifica se o sstudante já está cadastrado por ID

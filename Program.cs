@@ -91,6 +91,20 @@ if(modelName == "Student")
         }
     }
 
+    if(modelAction == "ListFormed")
+    {
+        if(studentRepository.GetAllFormed().Count() > 0)
+        {
+            Console.WriteLine("Student List");
+            foreach (var student in studentRepository.GetAllFormed())
+            {
+                Console.WriteLine($"{student.Registration}, {student.Name}, {student.City}, Formado");
+            }
+        } else {
+            Console.WriteLine("Nenhum estudante cadastrado.");
+        }
+    }
+
     if(modelAction == "ListByCity")
     {
         string city = args[2];
@@ -135,6 +149,41 @@ if(modelName == "Student")
         } else {
             Console.WriteLine("Nenhum estudante cadastrado.");
         }
-        
+    }
+
+    if(modelAction == "Report")
+    {
+        if(args[2] == "CountByCities")
+        {
+            if(studentRepository.CountByCities().Count() > 0)
+            {
+                Console.WriteLine("Students By City List");
+                foreach (var city in studentRepository.CountByCities())
+                {
+                    Console.WriteLine($"{city.AttributeName}, {city.StudentNumber}");
+                }
+            } else {
+                Console.WriteLine("Nenhum estudante cadastrado.");
+            }
+        }
+
+        if(args[2] == "CountByFormed")
+        {
+            if(studentRepository.CountByFormed().Count() > 0)
+            {
+                Console.WriteLine("Students Formed List");
+                foreach (var formed in studentRepository.CountByFormed())
+                {
+                    if(formed.AttributeName == "1")
+                    {
+                        Console.WriteLine($"Formados, {formed.StudentNumber}");
+                    } else {
+                        Console.WriteLine($"Não formados, {formed.StudentNumber}");
+                    }
+                }
+            } else {
+                Console.WriteLine("Nenhum estudante cadastrado.");
+            }
+        }
     }
 }
